@@ -1,28 +1,26 @@
 from typing import List
 
 def maxPathSum(matrix: List[List[int]]) -> int:
-    h = len(matrix)
-    if h == 0:
+    height = len(matrix)
+    if height == 0:
         return 0
-    w = len(matrix[-1])
 
-    # Initialize the dp array with infinity, and set the last row equal to the matrix's last row
-    dp = [[float('-inf')] * w for _ in range(h)]
+    # Initialize the dp array. Set the last row equal to the last row of the input matrix
+    dp = [[float('-inf')] * (i + 1) for i in range(height)]
     dp[-1] = matrix[-1]
 
-    # Iterate from the second last row to the first row
-    for i in range(h - 2, -1, -1):
+    # Iterate from the bottom to the top
+    for i in range(height - 2, -1, -1):
         for j in range(i + 1):
-            # For each cell, calculate the minimum sum of the falling path up to that cell
-            # It considers the current cell value and the minimum of the three possible
-            # previous positions (directly below, diagonally left, and diagonally right)
+            # For each number, calculate the maximum sum of the path from the bottom to the number
+            # Considers the current number and the maximum of the two possible numbers below (below, diagonally right)
             dp[i][j] = matrix[i][j] + max(
-                dp[i + 1][j],  # Directly below
+                dp[i + 1][j],  # Below
                 dp[i + 1][j + 1] if j < i else float("-inf")  # Diagonally right
             )
 
-    # The answer is the minimum value in the first row of dp
-    return max(dp[0])
+    # The answer is the value in the first row
+    return dp[0][0]
 
 if __name__ == '__main__':
     matrix_1 = [[3],
